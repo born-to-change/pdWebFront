@@ -11,7 +11,7 @@ const Login = resolve => require(['@/pages/login/login'], resolve)
 const Admin = resolve => require(['@/pages/admin/admin'], resolve)
 const user = resolve => require(['@/components/item/userItem'], resolve)
 const todoList = resolve => require(['@/pages/todo/todoList'], resolve)
-const test = resolve => require(['@/components/form/createCamera'], resolve)
+const test = resolve => require(['@/components/Test/ping'], resolve)
 
 Vue.use(Router)
 Vue.use(VueAMap);
