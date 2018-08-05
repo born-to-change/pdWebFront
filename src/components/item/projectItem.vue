@@ -1,7 +1,7 @@
 <template>
   <div id="addProject">
     <el-button type="primary" @click="addProject">创建项目</el-button>
-    <div id="add-pro-form" v-show="pro_isShow">
+    <el-dialog title="创建项目" :visible.sync="pro_isShow">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="项目名称">
           <el-input v-model="project.projectName"></el-input>
@@ -14,7 +14,7 @@
           <el-button @click="cancelPro">取消</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -43,15 +43,16 @@
       cancelPro(){
         this.pro_isShow = false
       }
+    },
+    computed:{
+
+
     }
   }
+
 
 </script>
 
 <style scoped>
-  #addProject{
-    width: 300px;
-    height: 400px;
-  }
 
 </style>

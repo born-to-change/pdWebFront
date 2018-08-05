@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueAMap from 'vue-amap';
 
 const Mine = resolve => require(['@/pages/mine/mine'], resolve)
 const Home = resolve => require(['@/pages/main/Home'], resolve)
@@ -11,15 +10,9 @@ const Login = resolve => require(['@/pages/login/login'], resolve)
 const Admin = resolve => require(['@/pages/admin/admin'], resolve)
 const user = resolve => require(['@/components/item/userItem'], resolve)
 const todoList = resolve => require(['@/pages/todo/todoList'], resolve)
-const test = resolve => require(['@/components/Test/ping'], resolve)
+const test = resolve => require(['@/components/map/index'], resolve)
 
 Vue.use(Router)
-Vue.use(VueAMap);
-VueAMap.initAMapApiLoader({
-  key: '005958ec52c4f0d07c5a65fdeecaa934',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','Geocoder','AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
-  v: '1.4.4'
-});
 const router =  new Router({
   mode: 'history',
   routes: [
