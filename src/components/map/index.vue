@@ -1,14 +1,7 @@
 <template>
-  <div id="app">
-    <div class="page-header">
-      <h1>在Vue中完美的使用高德地图</h1>
-      <p>在vue中使用高德地图API，全兼容。</p>
-      <a href="https://github.com/zuley/vue-gaode" target="_blank" class="btn">View on GitHub</a>
-      <a href="http://www.rxshc.com" target="_blank" class="btn">By 猪不乐意</a>
-    </div>
+  <div id="searchMap">
     <div class="g-wraper" v-hljs>
       <div class="m-part">
-        <h3 class="title">拖拽选址 - DEMO</h3>
         <mapDrag @drag="dragMap" class="mapbox"></mapDrag>
         <ul class="info">
           <li><span>经度：</span>{{ dragData.lng }}</li>
@@ -20,16 +13,15 @@
         </ul>
       </div>
     </div>
-    <div class="m-footer">本教程由<a href="http://www.rxshc.com" target="_blank">猪不乐意</a>编写</div>
   </div>
 </template>
 
 <script>
   import mapDrag from './searchMap.vue'
   export default {
-    name: 'app',
+    name: 'searchMap',
     components: {
-      mapDrag
+      mapDrag,
     },
     data () {
       return {
@@ -54,12 +46,15 @@
           nearestRoad: data.nearestRoad,
           nearestPOI: data.nearestPOI
         }
+      },
+      locateCity:function (map) {
+
       }
     }
   }
 </script>
 
-<style>
+<style scoped>
   body{ margin: 0; }
   .page-header{
     color: #fff; text-align: center; background: #159957;

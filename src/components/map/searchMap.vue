@@ -114,7 +114,7 @@
   }
 </script>
 
-<style lang="css">
+<style slang="css">
   .m-map{ min-width: 500px; min-height: 300px; position: relative; }
   .m-map .map{ width: 100%; height: 100%; }
   .m-map .search{ position: absolute; top: 10px; left: 10px; width: 285px; z-index: 1; }

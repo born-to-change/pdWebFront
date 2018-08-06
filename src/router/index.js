@@ -4,7 +4,7 @@ import Router from 'vue-router'
 const Mine = resolve => require(['@/pages/mine/mine'], resolve)
 const Home = resolve => require(['@/pages/main/Home'], resolve)
 const index = resolve => require(['@/pages/main/index'], resolve)
-const Project = resolve => require(['@/pages/project/proList'], resolve)
+const Project = resolve => require(['@/components/Test/Test'], resolve)
 const RunLog = resolve => require(['@/pages/runLog/log'], resolve)
 const Login = resolve => require(['@/pages/login/login'], resolve)
 const Admin = resolve => require(['@/pages/admin/admin'], resolve)

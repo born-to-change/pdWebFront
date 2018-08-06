@@ -22,23 +22,29 @@
         :value="item.id">
       </el-option>
     </el-select>
-    <el-select
-      v-model="qu"
-      @change="choseBlock"
-      placeholder="区级地区">
-      <el-option
-        v-for="item in qu1"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
+    <!--<el-select-->
+      <!--v-model="qu"-->
+      <!--@change="choseBlock"-->
+      <!--placeholder="区级地区">-->
+      <!--<el-option-->
+        <!--v-for="item in qu1"-->
+        <!--:key="item.id"-->
+        <!--:label="item.value"-->
+        <!--:value="item.id">-->
+      <!--</el-option>-->
+    <!--</el-select>-->
+    <el-button @click="submitLocation"></el-button>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
+  import ElBadge from "../../../node_modules/element-ui/packages/badge/src/main.vue";
+  import ElButton from "../../../node_modules/element-ui/packages/button/src/button.vue";
   export default {
+    components: {
+      ElButton,
+      ElBadge},
     data () {
       return {
         mapJson:'../static/json/map.json',
@@ -46,13 +52,16 @@
         sheng: '',
         shi: '',
         shi1: [],
-        qu: '',
-        qu1: [],
-        city:'',
-        block:'',
+//        qu: '',
+//        qu1: [],
+//        city:'',
+//        block:'',
       }
     },
     methods:{
+      submitLocation:function () {
+        this.$emit('locate',this.shi)
+      },
       // 加载china地点数据，三级
       getCityData:function(){
         var that = this
