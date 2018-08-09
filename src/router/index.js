@@ -1,17 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueAMap from 'vue-amap'
 
 const Mine = resolve => require(['@/pages/mine/mine'], resolve)
 const Home = resolve => require(['@/pages/main/Home'], resolve)
 const index = resolve => require(['@/pages/main/index'], resolve)
-const Project = resolve => require(['@/components/Test/Test'], resolve)
+const Project = resolve => require(['@/components/map/index'], resolve)
 const RunLog = resolve => require(['@/pages/runLog/log'], resolve)
 const Login = resolve => require(['@/pages/login/login'], resolve)
 const Admin = resolve => require(['@/pages/admin/admin'], resolve)
 const user = resolve => require(['@/components/item/userItem'], resolve)
-const todoList = resolve => require(['@/pages/todo/todoList'], resolve)
-const test = resolve => require(['@/components/map/index'], resolve)
+const todoList = resolve => require(['@/components/Test/Test'], resolve)
+const test = resolve => require(['@/components/map/map'], resolve)
 
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+  key: 'cfd8da5cf010c5f7441834ff5e764f5b',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+})
 Vue.use(Router)
 const router =  new Router({
   mode: 'history',
