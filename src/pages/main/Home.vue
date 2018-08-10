@@ -65,11 +65,13 @@
           <!--size="mini"-->
           <!--type="info"-->
           <!--@click="manageProjectFile(scope.$index, scope.row)">管理项目文件</el-button>-->
-          <el-button
+          <router-link to="/map">
+           <el-button
             size="mini"
             type="primary"
             @click="processVideo(scope.$index, scope.row)">行人轨迹检测
-          </el-button>
+           </el-button>
+          </router-link>
           <el-button
             size="mini"
             @click="handleEdit(scope.$index, scope.row)">编辑信息
@@ -136,6 +138,9 @@
         })
     },
     methods: {
+      processVideo(index,row){
+
+      },
       addProject() {
         this.pro_isShow = true,
           this.project = {}

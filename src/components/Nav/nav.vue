@@ -10,24 +10,21 @@
         <ul id="hh">
           <router-link to="/home">
             <li>
-              <em>首页</em>
+              <em class="haha">首页</em>
             </li>
           </router-link >
-          <router-link to="/project">
-            <li >
-              <em>项目管理</em>
-            </li>
-          </router-link>
-          <router-link to="/runLog">
-            <li >
-              <em>历史记录</em>
-            </li>
-          </router-link>
-          <router-link to="/mine">
-            <li>
-              <em>我的</em>
-            </li>
-          </router-link>
+          <li class="dif"><a href="http://localhost:8087/index">
+            <em class="dif">文件管理</em>
+          </a></li>
+          <li class="dif"><a href="http://localhost:8087/upload">
+            <em class="dif">文件上传</em>
+          </a></li>
+          <li class="dif"><a href="http://localhost:8087/admin">
+            <em>用户管理</em>
+          </a></li>
+          <li class="dif"><a href="http://localhost:8087/mine.html">
+            <em class="dif">个人中心</em>
+          </a></li>
         </ul>
       </div>
     </div>
@@ -44,6 +41,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
+  .dif{
+    font-weight: normal;
+  }
+
   *{
     margin: 0;
     padding: 0;
@@ -52,7 +54,8 @@ export default {
     font-style: normal;
 
   }
-  em{
+
+  .haha{
     text-align: center;
     border: 0;
     display:inline-block;
@@ -62,7 +65,11 @@ export default {
     outline: none;
     padding-top: 25px;
   }
-
+  a{
+    color: #8470FF;
+    text-decoration: none;
+    outline: none;
+  }
   li{
     text-align: center;
     border: 0;
@@ -126,7 +133,10 @@ export default {
     line-height: 17px;
     vertical-align: top;
   }
-
+  li,ul,img,a,div{
+    border: 0;
+    list-style: none;
+  }
   .ue-bar-nav li a{
     height: 22px;
     line-height: 22px;

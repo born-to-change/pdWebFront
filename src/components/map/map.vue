@@ -14,7 +14,7 @@
     </div>
     <div v-show="isEditCamera" class="locate">
       <el-row>
-        <el-button class="bing_video" type="success" plain v-on:click="bingVideo">绑定视频</el-button>
+        <!--<el-button class="bing_video" type="success" plain v-on:click="bingVideo">绑定视频</el-button>-->
         <el-button class="finishLocate" type="warning" plain v-on:click="closeLocate">创建完成</el-button>
 
       </el-row>
