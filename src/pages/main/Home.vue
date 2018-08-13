@@ -123,6 +123,14 @@
       }
     },
     mounted: function () {
+      window.addEventListener('message', function(ev) {
+        // if (ev.source !== window.parent) {return;}
+        var data = JSON.parse(ev.data)
+        localStorage.setItem("userName",data.user_name)
+        localStorage.setItem("userId",data.user_id)
+        console.info('message from parent:', data);
+      }, false);
+
       var _this = this;
       _this.$axios.post('http://localhost:8081/project/getProjectsByUserId', {
         userId: 1
