@@ -43,23 +43,7 @@
         },
         zoom: 14,
         center: [116.405306, 39.904989],
-        markers: [
-          {
-            position: [116.405306, 39.904989],
-            events: {
-              click: () => {
-                alert('click marker');
-              },
-              dragend: (e) => {
-                console.log('---event---: dragend')
-                this.markers[0].position = [e.lnglat.lng, e.lnglat.lat];
-              }
-            },
-            visible: true,
-            draggable: false,
-            template: '<span>1</span>',
-          }
-        ],
+        markers: [],
         renderMarker: {
           position: [116.415306, 39.904089],
           contentRender: (h, instance) => {
@@ -104,6 +88,7 @@
         let marker = {
           position: [dragData.lng,dragData.lat]
         };
+        console.log(dragData)
         this.markers.push(marker);
       },
       removeMarker() {
@@ -113,7 +98,6 @@
     }
   }
 </script>
-
 <style scoped>
   .routeMap{
     width: 100%;

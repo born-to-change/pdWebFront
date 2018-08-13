@@ -43,9 +43,6 @@
           lng: data.position.lng,
           lat: data.position.lat,
           address: data.address,
-          nearestJunction: data.nearestJunction,
-          nearestRoad: data.nearestRoad,
-          nearestPOI: data.nearestPOI
         }
       },
       addCamera(){

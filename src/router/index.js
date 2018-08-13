@@ -8,8 +8,8 @@ const MapIndex = resolve => require(['@/components/map/map'], resolve)
 
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
-  key: 'cfd8da5cf010c5f7441834ff5e764f5b',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+  key: '7aee2579a0658fc44426b6d31397bb37',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','Geocoder','AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
 })
 Vue.use(Router)
 const router =  new Router({
