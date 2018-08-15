@@ -159,7 +159,6 @@
       addProject() {
         this.pro_isShow = true,
           this.project = {}
-        localStorage.setItem('userId', 1)
         this.project.userId = localStorage.getItem('userId')
       },
       onSubmit() {
