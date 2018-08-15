@@ -1,7 +1,6 @@
 <template>
   <div id="project">
     <el-button type="primary" @click="addProject">创建项目</el-button>
-
     <el-dialog title="创建项目" :visible.sync="pro_isShow">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="项目名称">
@@ -116,7 +115,7 @@
           proId: '',
           proTime: '',
           proDescription: '',
-          userId: ''
+          userId: localStorage.getItem("userId")
         },
         editIndex: "",
 
@@ -133,7 +132,7 @@
 
       var _this = this;
       _this.$axios.post('http://localhost:8081/project/getProjectsByUserId', {
-        userId: 1
+        userId: localStorage.getItem("userId")
       }).then(function (response) {
         _this.projects = response.data
         _this.projects.forEach(function (value, index, array) {
@@ -147,7 +146,15 @@
     },
     methods: {
       processVideo(index,row){
-
+        axios.post('http://localhost:8081/project/getProjectByProName', {
+          proName: row.proName
+        }).then(function (response) {
+          var project = response.data
+          localStorage.setItem("proId",project.proId)
+        })
+          .catch(function (error) {
+            console.log(error)
+          })
       },
       addProject() {
         this.pro_isShow = true,

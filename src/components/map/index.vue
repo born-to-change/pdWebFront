@@ -7,7 +7,7 @@
           <li><span>经度：</span>{{ dragData.lng }}</li>
           <li><span>纬度：</span>{{ dragData.lat }}</li>
           <li><span>地址：</span>{{ dragData.address }}</li>
-          <el-button type="success" class="mark" icon="el-icon-check" @click="addCamera()" circle>mark</el-button>
+          <el-button type="primary" plain @click="addCamera()" circle>创建摄像头</el-button>
           <!--<li><span>最近的路口：</span>{{ dragData.nearestJunction }}</li>-->
           <!--<li><span>最近的路：</span>{{ dragData.nearestRoad }}</li>-->
           <!--<li><span>最近的POI：</span>{{ dragData.nearestPOI }}</li>-->

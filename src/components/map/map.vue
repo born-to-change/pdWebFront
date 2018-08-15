@@ -9,7 +9,8 @@
     <div class="amap-page-container">
       <el-amap vid="amapDemo" :zoom="zoom" :center="center" class="amap-demo">
         <el-amap-marker vid="component-marker" :position="componentMarker.position" :content-render="componentMarker.contentRender" ></el-amap-marker>
-        <el-amap-marker v-for="(marker, index) in markers" :position="marker.position" :key="index" :events="marker.events" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
+        <el-amap-marker v-for="(marker, index) in markers" :position="marker.position" :key="index"
+                        :events="marker.events" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
       </el-amap>
     </div>
     <div v-show="isEditCamera" class="locate">
@@ -20,12 +21,34 @@
       </el-row>
       <mapLocate @addMark="addMarker"></mapLocate>
     </div>
+
+
+    <el-dialog
+      title="提示"
+      :visible.sync="userFileDialogVisible"
+      width="70%"
+      center>
+      <el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in videos"
+          :key="item.fileName"
+          :label="item.fileName"
+          :value="item.fileUrl">
+        </el-option>
+      </el-select>
+
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="centerDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
   import mapLocate from './index.vue'
+  import axios from 'axios'
   export default {
     name: 'amap-page',
     components: {
@@ -33,7 +56,10 @@
     },
     data() {
       return {
+        fileName: '',
+        videos:[],
         isEditCamera:false,
+        userFileDialogVisible: false,
         count: 1,
         slotStyle: {
           padding: '2px 8px',
@@ -85,6 +111,18 @@
         this.markers[0].draggable = !draggable;
       },
       addMarker:function (dragData) {
+        var _this = this
+        axios.post('http://localhost:8081/file/getImagesByUserId', {
+          userId: localStorage.getItem("userId")
+        }).then(function (response) {
+          var files = response.data
+          _this.videos = files
+        })
+          .catch(function (error) {
+            console.log(error)
+          })
+        this.userFileDialogVisible = true
+
         let marker = {
           position: [dragData.lng,dragData.lat]
         };
