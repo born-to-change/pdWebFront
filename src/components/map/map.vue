@@ -25,21 +25,40 @@
 
     <el-dialog
       title="提示"
-      :visible.sync="userFileDialogVisible"
-      width="70%"
+      :visible.sync="editCameraDialogVisible"
+      width="60%"
       center>
-      <el-select v-model="value" placeholder="请选择">
+      <el-form :model="cam">
+        <el-form-item label="摄像头名称" :label-width="formLabelWidth">
+          <el-input v-model="cam.camName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-input v-model="cam.cameraDescription" placeholder="请填写摄像头备注"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span class="demonstration">选择视频文件</span>
+      <el-select v-model="fileName" placeholder="请选择">
         <el-option
           v-for="item in videos"
-          :key="item.fileName"
+          :key="item.fileId"
           :label="item.fileName"
-          :value="item.fileUrl">
+          :value="item.fileName">
         </el-option>
       </el-select>
 
+      <div class="block">
+        <span class="demonstration">视频开始时间</span>
+        <el-date-picker
+          v-model="cam.videoTime"
+          type="datetime"
+          placeholder="选择日期时间">
+        </el-date-picker>
+      </div>
+
       <span slot="footer" class="dialog-footer">
-    <el-button @click="centerDialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+    <el-button @click="cancelCamera">取 消</el-button>
+    <el-button type="primary" @click="saveCamera">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -56,10 +75,11 @@
     },
     data() {
       return {
+        fileId:"",
         fileName: '',
         videos:[],
         isEditCamera:false,
-        userFileDialogVisible: false,
+        editCameraDialogVisible: false,
         count: 1,
         slotStyle: {
           padding: '2px 8px',
@@ -70,6 +90,18 @@
         zoom: 14,
         center: [116.405306, 39.904989],
         markers: [],
+        cam:{
+          videoImage:"wait",
+          cameraDescription:"",
+          camLng:"",
+          camLat:"",
+          camName:"",
+          videoTime:"",
+          bingingFileId:"",
+          startTime:"",
+          endTime:"",
+          videoUrl:""
+        },
         renderMarker: {
           position: [116.415306, 39.904089],
           contentRender: (h, instance) => {
@@ -100,6 +132,21 @@
       };
     },
     methods: {
+      cancelCamera(){
+        this.editCameraDialogVisible = false
+      },
+      saveCamera(){
+        this.editCameraDialogVisible = false
+        this.cam.bingingFileId = this.fileId
+        axios.post('http://172.18.32.192:8081/camera/createCamera', {
+          camera: this.cam
+        }).then(function (response) {
+
+        })
+          .catch(function (error) {
+            console.log(error)
+          })
+      },
       createCamera(){
         this.isEditCamera = true
       },
@@ -110,9 +157,10 @@
         let draggable = this.markers[0].draggable;
         this.markers[0].draggable = !draggable;
       },
+
       addMarker:function (dragData) {
         var _this = this
-        axios.post('http://172.18.32.192:8081/file/getImagesByUserId', {
+        axios.post('http://172.18.32.192:8081/file/getVideosByUserId', {
           userId: localStorage.getItem("userId")
         }).then(function (response) {
           var files = response.data
@@ -121,13 +169,17 @@
           .catch(function (error) {
             console.log(error)
           })
-        this.userFileDialogVisible = true
+
+         this.editCameraDialogVisible = true
+         this.cam.camLng = dragData.lng
+         this.cam.camLat = dragData.lat
+         this.cam.proId = localStorage.getItem("proId")
 
         let marker = {
           position: [dragData.lng,dragData.lat]
         };
         console.log(dragData)
-        this.markers.push(marker);
+        this.markers.splice(0,0,marker);
       },
       removeMarker() {
         if (!this.markers.length) return;
