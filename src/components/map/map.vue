@@ -112,7 +112,7 @@
       },
       addMarker:function (dragData) {
         var _this = this
-        axios.post('http://localhost:8081/file/getImagesByUserId', {
+        axios.post('http://172.18.32.192:8081/file/getImagesByUserId', {
           userId: localStorage.getItem("userId")
         }).then(function (response) {
           var files = response.data

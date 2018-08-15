@@ -13,16 +13,16 @@
               <em class="haha">首页</em>
             </li>
           </router-link >
-          <li class="dif"><a href="http://localhost:8087/index">
+          <li class="dif"><a href="http://172.18.32.192:8087/index">
             <em class="dif">文件管理</em>
           </a></li>
-          <li class="dif"><a href="http://localhost:8087/upload">
+          <li class="dif"><a href="http://172.18.32.192:8087/upload">
             <em class="dif">文件上传</em>
           </a></li>
-          <li class="dif"><a href="http://localhost:8087/admin">
+          <li class="dif"><a href="http://172.18.32.192:8087/admin">
             <em>用户管理</em>
           </a></li>
-          <li class="dif"><a href="http://localhost:8087/mine.html">
+          <li class="dif"><a href="http://172.18.32.192:8087/mine.html">
             <em class="dif">个人中心</em>
           </a></li>
         </ul>

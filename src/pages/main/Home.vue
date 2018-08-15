@@ -131,7 +131,7 @@
       }, false);
 
       var _this = this;
-      _this.$axios.post('http://localhost:8081/project/getProjectsByUserId', {
+      _this.$axios.post('http://172.18.32.192:8081/project/getProjectsByUserId', {
         userId: localStorage.getItem("userId")
       }).then(function (response) {
         _this.projects = response.data
@@ -146,7 +146,7 @@
     },
     methods: {
       processVideo(index,row){
-        axios.post('http://localhost:8081/project/getProjectByProName', {
+        axios.post('http://172.18.32.192:8081/project/getProjectByProName', {
           proName: row.proName
         }).then(function (response) {
           var project = response.data
@@ -181,7 +181,7 @@
           } else {
             alert('项目名不能为空 !-_-');
           }
-          axios.post('http://localhost:8081/project/createProject', {
+          axios.post('http://172.18.32.192:8081/project/createProject', {
             project: this.projects[0]
           }).then(function (response) {
             console.log(response.data)
@@ -202,7 +202,7 @@
         this.dialogFormVisible = false
         this.editProject.proTime = new Date()
         console.log(this.projects[this.editIndex])
-        axios.post('http://localhost:8081/project/updateProject', {
+        axios.post('http://172.18.32.192:8081/project/updateProject', {
           project: _this.editProject
         }).then(function (response) {
           console.log(response.data)
@@ -222,7 +222,7 @@
         this.dialogFormVisible = true
         $.ajax({
           type: 'POST',
-          url: "http://localhost:8081/project/getProjectByProjectId",
+          url: "http://172.18.32.192:8081/project/getProjectByProjectId",
           data: JSON.stringify({proId: row.proId}),
           dataType: "JSON",
           contentType: 'application/json;charset=utf-8',
@@ -246,7 +246,7 @@
           this.projects.splice(index, 1),
             $.ajax({
               type: 'POST',
-              url: "http://localhost:8081/project/deleteProject",
+              url: "http://172.18.32.192:8081/project/deleteProject",
               data: JSON.stringify({proId: row.proId}),
               dataType: "JSON",
               contentType: 'application/json;charset=utf-8',
