@@ -134,6 +134,8 @@
         videos:[],
         editOrCreate:1,
         editCamId:"",
+        editIndex:"",
+        editRow:"",
         isEditCamera:false,
         editCameraDialogVisible: false,
         count: 1,
@@ -226,6 +228,8 @@
           _this.editOrCreate = 0
           _this.editCamId = temp.cameraId
           _this.fileId = temp.bingingFileId
+          _this.editIndex = index
+          _this.editRow = row
 
         })
         axios.post('http://172.18.32.192:8081/file/getFileByFileId', {
@@ -292,6 +296,7 @@
           axios.post('http://172.18.32.192:8081/camera/updateCamera', {
             camera: _this.cam
           }).then(function (response) {
+            _this.editIndex.splice(_this.editIndex,1)
             _this.cameras.splice(0, 0, _this.cam)
           })
             .catch(function (error) {
