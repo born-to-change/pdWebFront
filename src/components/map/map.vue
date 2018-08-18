@@ -2,9 +2,8 @@
   <div class="routeMap">
     <el-row>
       <el-button type="primary" plain @click="createCamera">创建摄像头</el-button>
-      <el-button type="primary" plain @click="manageCamera">管理摄像头</el-button>
       <el-button type="primary" plain @click="bingImage">绑定检索图片</el-button>
-      <el-button type="primary" plain @click="processVideo">处理视频</el-button>
+      <el-button type="primary" plain @click="manageCamera">生成行人轨迹</el-button>
     </el-row>
     <div class="amap-page-container">
       <el-amap vid="amapDemo" :zoom="zoom" :center="center" class="amap-demo">
@@ -119,6 +118,7 @@
 <script>
   import mapLocate from './index.vue'
   import axios from 'axios'
+  import $ from 'jquery'
   import ElButton from "../../../node_modules/element-ui/packages/button/src/button.vue";
   import {timestamp2Date,Date2timestamp} from '../../../src/util/fmtDate.js'
   export default {
@@ -191,10 +191,19 @@
     },
     mounted: function () {
       var _this = this;
+      this.markers = []
       axios.post('http://172.18.32.192:8081/camera/getCamerasByProId', {
         proId: localStorage.getItem("proId")
       }).then(function (response) {
         _this.cameras = response.data
+        _this.cam ={videoImage:"Na"}
+        for(var item of _this.cameras){
+          let marker = {
+            position: [item.camLng,item.camLat]
+          };
+          console.log(_this.markers)
+          _this.markers.splice(0,0,marker);
+        }
       })
         .catch(function (error) {
           console.log(error)
@@ -210,10 +219,44 @@
           })
           .catch(_ => {});
       },
-      processCamera(){
+      processCamera(index,row){
+        axios.post('http://172.18.32.192:5000/processVideo',{
+          userId:localStorage.getItem("userId"),
+          userName:localStorage.getItem("userName"),
+          proId:localStorage.getItem("proId"),
+          videoUrl:row.videoUrl,
+          camName:row.camName,
+          videoTime:row.videoTime
+        }).then(function (response) {
+          var temp = response.data
+          _this.cam.videoUrl = temp.fileUrl
+          _this.fileName = temp.fileName
 
+        })
+          .catch(function (error) {
+            console.log(error)
+          })
       },
-      deleteCamera(){
+      deleteCamera(index,row){
+        this.$confirm('此操作将永久删除该摄像头和其处理结果, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.cameras.splice(index,1)
+          axios.post('http://172.18.32.192:8081/camera/deleteCamera', {
+            cameraId: row.cameraId
+          })
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
 
       },
       editCamera(index,row){
@@ -228,6 +271,7 @@
           _this.editOrCreate = 0
           _this.editCamId = temp.cameraId
           _this.fileId = temp.bingingFileId
+          _this.fileName = temp.fileName
           _this.editIndex = index
           _this.editRow = row
 
@@ -296,7 +340,7 @@
           axios.post('http://172.18.32.192:8081/camera/updateCamera', {
             camera: _this.cam
           }).then(function (response) {
-            _this.editIndex.splice(_this.editIndex,1)
+            _this.cameras.splice(_this.editIndex,1)
             _this.cameras.splice(0, 0, _this.cam)
           })
             .catch(function (error) {
@@ -307,7 +351,6 @@
       },
       createCamera(){
         this.isEditCamera = true
-        this.cam ={videoImage:"Na"}
         this.editOrCreate = 1
       },
       onClick() {
@@ -319,6 +362,12 @@
       },
 
       addMarker:function (dragData) {
+        this.cam ={videoImage:"Na"}
+        let marker = {
+          position: [dragData.lng,dragData.lat]
+        };
+        console.log(dragData)
+        this.markers.splice(0,0,marker);
         var _this = this
         axios.post('http://172.18.32.192:8081/file/getVideosByUserId', {
           userId: localStorage.getItem("userId"),
@@ -335,12 +384,6 @@
          this.cam.camLng = dragData.lng
          this.cam.camLat = dragData.lat
          this.cam.proId = localStorage.getItem("proId")
-
-        let marker = {
-          position: [dragData.lng,dragData.lat]
-        };
-        console.log(dragData)
-        this.markers.splice(0,0,marker);
       },
       removeMarker() {
         if (!this.markers.length) return;
