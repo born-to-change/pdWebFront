@@ -40,7 +40,7 @@
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.proName }}</span>
-        </template>
+        </template>x
       </el-table-column>
       <el-table-column
         label="时间"

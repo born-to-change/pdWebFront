@@ -3,7 +3,9 @@
     <el-row>
       <el-button type="primary" plain @click="createCamera">创建摄像头</el-button>
       <el-button type="primary" plain @click="bingImage">绑定检索图片</el-button>
+      <router-link to="/test">
       <el-button type="primary" plain @click="manageCamera">生成行人轨迹</el-button>
+        </router-link>
     </el-row>
     <div class="amap-page-container">
       <el-amap vid="amapDemo" :zoom="zoom" :center="center" class="amap-demo">
@@ -203,6 +205,7 @@
           };
           console.log(_this.markers)
           _this.markers.splice(0,0,marker);
+          item.videoTime = timestamp2Date(item.videoTime)
         }
       })
         .catch(function (error) {
