@@ -2,6 +2,7 @@
   <div class="routeMap">
     <el-row>
       <el-button type="primary" plain @click="createCamera">创建摄像头</el-button>
+      <el-button class="finishLocate" type="warning" plain v-on:click="finishAddCam">创建完成</el-button>
       <el-button type="primary" plain @click="bingImage">绑定检索图片</el-button>
       <router-link to="/test">
       <el-button type="primary" plain @click="manageCamera">生成行人轨迹</el-button>
@@ -13,16 +14,36 @@
         <el-amap-marker v-for="(marker, index) in markers" :position="marker.position" :key="index"
                         :events="marker.events" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
       </el-amap>
+
+      <el-dialog
+        title="图片列表"
+        :visible.sync="imgListDialogVisible"
+        width="70%"
+        :lock-scroll="false"
+        :before-close="handleClose">
+        <ul class="list-unstyled list-inline">
+          <li class="imgLi"  v-for="(item,index) in imageList" :key="index"
+              :item="item"
+              :index="index">
+            <img class="img" :src=item.fileUrl>
+          </li>
+        </ul>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+      </el-dialog>
+
+
     </div>
     <div v-show="isEditCamera" class="locate">
-      <el-row>
+
         <!--<el-button class="bing_video" type="success" plain v-on:click="bingVideo">绑定视频</el-button>-->
-        <el-button class="finishLocate" type="warning" plain v-on:click="closeLocate">创建完成</el-button>
 
-      </el-row>
-      <mapLocate @addMark="addMarker"></mapLocate>
+
+
+        <mapLocate v-show="addCam" @addMark="addMarker"></mapLocate>
     </div>
-
 
     <el-dialog
       title="提示"
@@ -93,7 +114,13 @@
           </el-popover>
         </template>
       </el-table-column>
-
+      <el-table-column
+        label="进度"
+        width="180">
+        <template slot-scope="scope">
+          <el-progress :percentage="80" color="#8e71c7"></el-progress>
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -131,6 +158,9 @@
     },
     data() {
       return {
+        imgListDialogVisible:false,
+        imageList:[],
+        addCam:true,
         fileId:"",
         fileName: '',
         videos:[],
@@ -213,6 +243,29 @@
         })
     },
     methods: {
+      bingImage(){
+        var _this = this
+          axios.post('http://172.18.32.192:8081/file/getImagesByUserId', {
+            userId:localStorage.getItem("userId"),
+            proId: localStorage.getItem("proId")
+          }).then(function (response) {
+            _this.imageList = response.data
+          })
+            .catch(function (error) {
+              console.log(error)
+            })
+        this.imgListDialogVisible = true
+      },
+      finishAddCam(){
+        this.addCam = false
+      },
+      searchImgRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
       closeCamDialog(){
         this.$confirm('确认关闭？')
           .then(_ => {
@@ -353,6 +406,7 @@
 
       },
       createCamera(){
+        this.addCam = true
         this.isEditCamera = true
         this.editOrCreate = 1
       },
@@ -396,6 +450,22 @@
   }
 </script>
 <style scoped>
+  .el-dialog
+  display flex
+  flex-direction column
+
+  .img{
+    width: 128px;
+    height: 64px;
+  }
+  .dialog-footer{
+      margin: 10px;
+  }
+  .imgLi{
+    float:left;
+    /*list-style:none;*/
+    margin-left: 5px;
+  }
   .routeMap{
     width: 100%;
   }
