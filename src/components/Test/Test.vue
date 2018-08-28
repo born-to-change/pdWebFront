@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="videoSize">
     <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
     <el-dialog
       title="提示"
@@ -31,3 +31,9 @@
     }
   };
 </script>
+<style scoped>
+  .videoSize{
+    width: 500px;
+    height: 700px;
+  }
+</style>

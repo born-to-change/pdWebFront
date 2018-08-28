@@ -66,7 +66,7 @@
       <el-select v-model="fileId" placeholder="请选择">
         <el-option
           v-for="item in videos"
-          :key="item.fileId"
+          :key="item.fileName"
           :label="item.fileName"
           :value="item.fileId">
         </el-option>
@@ -162,7 +162,7 @@
         imageList:[],
         addCam:true,
         fileId:"",
-        fileName: '',
+        fileName: "",
         videos:[],
         editOrCreate:1,
         editCamId:"",
@@ -224,6 +224,7 @@
     mounted: function () {
       var _this = this;
       this.markers = []
+      setTimeout(function () {
       axios.post('http://172.18.32.192:8081/camera/getCamerasByProId', {
         proId: localStorage.getItem("proId")
       }).then(function (response) {
@@ -240,7 +241,7 @@
       })
         .catch(function (error) {
           console.log(error)
-        })
+        })},300)
     },
     methods: {
       bingImage(){
@@ -323,30 +324,28 @@
         }).then(function (response) {
           var temp = response.data
           _this.cam = temp
-          _this.editCameraDialogVisible = true
           _this.editOrCreate = 0
           _this.editCamId = temp.cameraId
           _this.fileId = temp.bingingFileId
-          _this.fileName = temp.fileName
+          _this.fileName = temp.bingingFileId
           _this.editIndex = index
           _this.editRow = row
 
         })
-        axios.post('http://172.18.32.192:8081/file/getFileByFileId', {
-          fileId: this.fileId
-        }).then(function (response) {
-          var temp = response.data
-          _this.cam.videoUrl = temp.fileUrl
-          _this.fileName = temp.fileName
+        var self=this;
+        setTimeout(function () {
+          axios.post('http://172.18.32.192:8081/file/getFileByFileId', {
+            fileId: row.bingingFileId,
+          }).then(function (response) {
+            var temp = response.data
+            self.cam.videoUrl = temp.fileUrl
+            self.fileId = temp.fileName
+          }).finally(
+            self.editCameraDialogVisible = true
+          )
+        }, 100)
 
-        })
-          .catch(function (error) {
-            console.log(error)
-          })
 
-          .catch(function (error) {
-            console.log(error)
-          })
         var _this = this
         axios.post('http://172.18.32.192:8081/file/getVideosByUserId', {
           userId: localStorage.getItem("userId"),
@@ -358,6 +357,8 @@
           .catch(function (error) {
             console.log(error)
           })
+
+
       },
       cancelCamera(){
         this.editCameraDialogVisible = false
@@ -366,7 +367,7 @@
       bindingVideo(){
         var _this = this
         axios.post('http://172.18.32.192:8081/file/getFileByFileId', {
-          fileId:  this.fileId
+          fileId:  _this.fileName
         }).then(function (response) {
           var temp = response.data
           _this.cam.videoUrl = temp.fileUrl
@@ -379,7 +380,7 @@
       saveCamera(){
         var _this = this;
         this.editCameraDialogVisible = false
-        this.cam.bingingFileId = this.fileId
+        this.cam.bingingFileId = this.fileName
         if(this.editOrCreate == 1) {
           axios.post('http://172.18.32.192:8081/camera/createCamera', {
             camera: _this.cam

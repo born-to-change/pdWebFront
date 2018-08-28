@@ -1,17 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueAMap from 'vue-amap'
+import VideoPlayer from 'vue-video-player'
 
 const Home = resolve => require(['@/pages/main/Home'], resolve)
 const index = resolve => require(['@/pages/main/index'], resolve)
 const MapIndex = resolve => require(['@/components/map/map'], resolve)
-const test = resolve => require(['@/components/map/line'], resolve)
+const test = resolve => require(['@/components/Test/VideoPlayer'], resolve)
 
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: '7aee2579a0658fc44426b6d31397bb37',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','Geocoder','AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
 })
+
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+Vue.use(VideoPlayer)
 Vue.use(Router)
 const router =  new Router({
   mode: 'history',
