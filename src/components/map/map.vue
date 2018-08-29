@@ -118,7 +118,7 @@
         label="进度"
         width="180">
         <template slot-scope="scope">
-          <el-progress :percentage="80" color="#8e71c7"></el-progress>
+          <el-progress v-show="scope.row.isShowPro" :percentage="scope.row.progress" color="#8e71c7"></el-progress>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -277,6 +277,7 @@
           .catch(_ => {});
       },
       processCamera(index,row){
+        var _this = this
         axios.post('http://172.18.32.192:5007/processVideo',{
           userId:localStorage.getItem("userId"),
           userName:localStorage.getItem("userName"),
@@ -288,11 +289,28 @@
           var temp = response.data
           _this.cam.videoUrl = temp.fileUrl
           _this.fileName = temp.fileName
+          row.isShowPro = true
 
         })
           .catch(function (error) {
             console.log(error)
           })
+
+        setInterval( axios.post('http://172.18.32.192:5007/getProgress',{
+          userId:localStorage.getItem("userId"),
+          userName:localStorage.getItem("userName"),
+          proId:localStorage.getItem("proId"),
+          videoUrl:row.videoUrl,
+          camName:row.camName
+        }).then(function (response) {
+          var temp = response.data
+          row.progress = temp
+
+
+        })
+          .catch(function (error) {
+            console.log(error)
+          }),10000)
       },
       deleteCamera(index,row){
         this.$confirm('此操作将永久删除该摄像头和其处理结果, 是否继续?', '提示', {
