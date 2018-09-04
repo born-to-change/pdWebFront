@@ -7,6 +7,7 @@ const Home = resolve => require(['@/pages/main/Home'], resolve)
 const index = resolve => require(['@/pages/main/index'], resolve)
 const MapIndex = resolve => require(['@/components/map/map'], resolve)
 const test = resolve => require(['@/components/form/imageForm'], resolve)
+const image = resolve => require(['@/pages/process/ImageList'], resolve)
 
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
@@ -29,7 +30,7 @@ const router =  new Router({
       children: [
         {path: 'home', name: 'Home', component: Home, meta: {title: '行人检测首页'}},
         {path: 'map', name: 'mine', component: MapIndex, meta: {title: '地图'}},
-        {path: 'test', name: 'test', component: test, meta: {title: '地图'}},
+        {path: 'test', name: 'test', component: image, meta: {title: '地图'}},
       ]
     }
   ]

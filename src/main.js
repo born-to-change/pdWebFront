@@ -7,7 +7,10 @@ import router from './router'
 import axios from 'axios';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
-
+import iView from 'iview'
+import '!style-loader!css-loader!less-loader!./theme/index.less'
+Vue.config.productionTip = false
+Vue.use(iView)
 /* eslint-disable no-new */
 Vue.use(ElementUI, { size: 'small' });
 Vue.prototype.$axios = axios;

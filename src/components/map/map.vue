@@ -15,24 +15,7 @@
                         :events="marker.events" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
       </el-amap>
 
-      <el-dialog
-        title="图片列表"
-        :visible.sync="imgListDialogVisible"
-        width="70%"
-        :lock-scroll="false"
-        :before-close="handleClose">
-        <ul class="list-unstyled list-inline">
-          <li class="imgLi"  v-for="(item,index) in imageList" :key="index"
-              :item="item"
-              :index="index">
-            <img class="img" :src=item.fileUrl>
-          </li>
-        </ul>
-        <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
-      </el-dialog>
+
 
 
     </div>
@@ -168,8 +151,7 @@
     },
     data() {
       return {
-        imgListDialogVisible:false,
-        imageList:[],
+
         addCam:true,
         fileId:"",
         fileName: "",
