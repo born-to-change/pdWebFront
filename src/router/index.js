@@ -6,7 +6,7 @@ import VideoPlayer from 'vue-video-player'
 const Home = resolve => require(['@/pages/main/Home'], resolve)
 const index = resolve => require(['@/pages/main/index'], resolve)
 const MapIndex = resolve => require(['@/components/map/map'], resolve)
-const test = resolve => require(['@/components/Test/VideoPlayer'], resolve)
+const test = resolve => require(['@/components/form/imageForm'], resolve)
 
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({

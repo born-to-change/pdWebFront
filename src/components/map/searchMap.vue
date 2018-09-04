@@ -107,8 +107,6 @@
             zoom: 16,
             cityName:this.shi
           }
-          var lat = this.lat
-          var lng = this.lng
           if (this.lat && this.lng) {
             mapConfig.center = [this.lng, this.lat]
           }

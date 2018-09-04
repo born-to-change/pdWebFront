@@ -118,7 +118,7 @@
         label="进度"
         width="180">
         <template slot-scope="scope">
-          <el-progress v-show="scope.row.isShowPro" :percentage="scope.row.progress" color="#8e71c7"></el-progress>
+          <el-progress  :percentage="scope.row.progress" color="#8e71c7"></el-progress>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -127,6 +127,16 @@
             size="mini"
             type="primary"
             @click="processCamera(scope.$index, scope.row)">处理视频
+          </el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="pauseProcess(scope.$index, scope.row)">暂停
+          </el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="resolveResults(scope.$index, scope.row)">操作结果
           </el-button>
           <el-button
             size="mini"
@@ -244,6 +254,9 @@
         })},300)
     },
     methods: {
+      resolveResults(){
+
+      },
       bingImage(){
         var _this = this
           axios.post('http://172.18.32.192:8081/file/getImagesByUserId', {
@@ -276,9 +289,12 @@
           })
           .catch(_ => {});
       },
+      pauseProcess(index,row){
+          row.ispause = true
+      },
       processCamera(index,row){
         var _this = this
-        axios.post('http://172.18.32.192:5007/processVideo',{
+        axios.post('http://172.18.32.192:5004/processVideo',{
           userId:localStorage.getItem("userId"),
           userName:localStorage.getItem("userName"),
           proId:localStorage.getItem("proId"),
@@ -289,14 +305,14 @@
           var temp = response.data
           _this.cam.videoUrl = temp.fileUrl
           _this.fileName = temp.fileName
-          row.isShowPro = true
+
 
         })
           .catch(function (error) {
             console.log(error)
           })
 
-        setInterval( axios.post('http://172.18.32.192:5007/getProgress',{
+        var interval = setInterval( axios.post('http://172.18.32.192:5004/getProgress',{
           userId:localStorage.getItem("userId"),
           userName:localStorage.getItem("userName"),
           proId:localStorage.getItem("proId"),
@@ -305,12 +321,14 @@
         }).then(function (response) {
           var temp = response.data
           row.progress = temp
-
-
         })
           .catch(function (error) {
             console.log(error)
           }),10000)
+
+        if(row.ispause == true){
+          clearInterval(interval);
+        }
       },
       deleteCamera(index,row){
         this.$confirm('此操作将永久删除该摄像头和其处理结果, 是否继续?', '提示', {
