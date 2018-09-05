@@ -19,8 +19,8 @@
       </Row>
     </Row>
     <Row class="image-list" :gutter="16">
-      <Col :lg="6" :sm="12" class="vm-margin" v-for="item in dataShow" :key="item.id">
-        <VmCard :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item) "></VmCard>
+      <Col :lg="2" :sm="4" class="vm-margin" v-for="item in dataShow" :key="item.id">
+        <VmCard :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item)" @get-sequence="getSequence(item.title)"></VmCard>
       </Col>
     </Row>
   </div>
@@ -58,7 +58,7 @@
       return {
         keyword: '', // keyword for search
         dataShow: [], // data for showing
-        showNum: 8, // number of item per page
+        showNum: 48, // number of item per page
         currentPage: 1
       }
     },
@@ -84,6 +84,9 @@
             }
           }
         })
+      },
+      getSequence:function (imgName) {
+        this.$emit('get-sequence',imgName)
       },
       deleteOk: function (data) {
         this.$emit('delete-ok', data)

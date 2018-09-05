@@ -76,6 +76,7 @@
       style="width: 100%">
       <el-table-column
         label="摄像头名称"
+        align="center"
         width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -84,6 +85,7 @@
       </el-table-column>
       <el-table-column
         label="时间"
+        align="center"
         width="180">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -99,21 +101,23 @@
       </el-table-column>
       <el-table-column
         label="进度"
-        width="180">
+        align="center"
+        width="250">
         <template slot-scope="scope">
           <el-progress  :percentage="scope.row.processNum" color="#8e71c7"></el-progress>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center"
+      width="500">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="primary"
+            type="success"
             @click="processCamera(scope.$index, scope.row)">处理视频
           </el-button>
           <el-button
             size="mini"
-            type="primary"
+            type="warning"
             @click="pauseProcess(scope.$index, scope.row)">暂停
           </el-button>
             <el-button
@@ -484,18 +488,6 @@
   display flex
   flex-direction column
 
-  .img{
-    width: 128px;
-    height: 64px;
-  }
-  .dialog-footer{
-      margin: 10px;
-  }
-  .imgLi{
-    float:left;
-    /*list-style:none;*/
-    margin-left: 5px;
-  }
   .routeMap{
     width: 100%;
   }

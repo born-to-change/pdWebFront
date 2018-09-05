@@ -1,36 +1,37 @@
 <template>
-  <div :class="[type === 'horizantal' ? 'vm-card-horizantal' : 'vm-card-vertical' , 'vm-panel']">
-    <div class="card-img">
-      <img :src="img" alt="">
-      <div v-if="editable && type == 'vertical'" class="control">
+  <div>
+    <div :class="[type === 'horizantal' ? 'vm-card-horizantal' : 'vm-card-vertical' , 'vm-panel']">
+      <div class="card-img">
+        <img :src="img" alt="">
+        <div v-if="editable && type == 'vertical'" class="control">
         <span class="edit">
-          <a :href="editUrl">
-            <i class="fa fa-pencil"></i>
-          </a>
+            <i class="fa fa-camera" @click="getSequence"></i>
         </span>
-        <span class="delete">
-          <i class="fa fa-trash" @click="modalDelete=true"></i>
+          <span class="delete">
+          <i class="fa fa-check" @click="modal=true"></i>
         </span>
+        </div>
       </div>
-    </div>
-    <div class="card-desc panel-body">
-      <h2>{{ title }}</h2>
-      <p>{{ desc }}</p>
-      <a :href="detailUrl">
-        more >
-      </a>
-    </div>
-    <Modal
-        v-model="modalDelete"
+      <div class="card-desc panel-body">
+        <h5>{{ title }}</h5>
+        <p>{{ desc }}</p>
+      </div>
+      <Modal
+        v-model="modal"
         title="Delete"
         ok-text="OK"
         cancel-text="Cancel"
         v-on:on-ok="deleteOk">
         Are you sure to delete this data?
-    </Modal>
+      </Modal>
+    </div>
+
+
   </div>
+
 </template>
 <script>
+  import axios from 'axios'
   export default {
     name: 'VmCard',
     props: {
@@ -52,7 +53,7 @@
       },
       desc: {
         type: String,
-        default: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s'
+        default: '0'
       },
       detailUrl: {
         type: String,
@@ -69,6 +70,9 @@
       }
     },
     methods: {
+      getSequence:function () {
+       this.$emit('get-sequence')
+      },
       deleteOk: function () {
         this.$emit('delete-ok')
       }
