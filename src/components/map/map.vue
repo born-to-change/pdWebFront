@@ -101,7 +101,7 @@
         label="进度"
         width="180">
         <template slot-scope="scope">
-          <el-progress  :percentage="scope.row.progress" color="#8e71c7"></el-progress>
+          <el-progress  :percentage="scope.row.processNum" color="#8e71c7"></el-progress>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -116,11 +116,12 @@
             type="primary"
             @click="pauseProcess(scope.$index, scope.row)">暂停
           </el-button>
-          <el-button
-            size="mini"
-            type="primary"
-            @click="resolveResults(scope.$index, scope.row)">操作结果
-          </el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="resolveResults(scope.$index, scope.row)">操作结果
+            </el-button>
+
           <el-button
             size="mini"
             @click="editCamera(scope.$index, scope.row)">编辑
@@ -236,7 +237,19 @@
         })},300)
     },
     methods: {
-      resolveResults(){
+      resolveResults(index,row){
+        localStorage.setItem('currentCam',JSON.stringify(row))
+        if(row.status == 1){
+          this.$router.push({path:'/test'})
+        }else {
+          this.$confirm('视频尚未处理完，您确定要预览处理结果吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$router.push({path:'/test'})
+          })
+        }
 
       },
       bingImage(){
@@ -272,7 +285,7 @@
           .catch(_ => {});
       },
       pauseProcess(index,row){
-          row.ispause = true
+       row.isProcess = 0
       },
       processCamera(index,row){
         var _this = this
@@ -287,14 +300,12 @@
           var temp = response.data
           _this.cam.videoUrl = temp.fileUrl
           _this.fileName = temp.fileName
-
-
         })
           .catch(function (error) {
             console.log(error)
           })
 
-        var interval = setInterval( axios.post('http://172.18.32.192:5004/getProgress',{
+        var interval = setInterval( axios.post('http://172.18.32.192:5006/getProgress',{
           userId:localStorage.getItem("userId"),
           userName:localStorage.getItem("userName"),
           proId:localStorage.getItem("proId"),
@@ -302,13 +313,13 @@
           camName:row.camName
         }).then(function (response) {
           var temp = response.data
-          row.progress = temp
+          row.processNum = temp
         })
           .catch(function (error) {
             console.log(error)
           }),10000)
 
-        if(row.ispause == true){
+        if(row.isProcess == 0){
           clearInterval(interval);
         }
       },

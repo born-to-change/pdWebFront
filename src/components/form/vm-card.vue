@@ -6,7 +6,7 @@
         <span class="edit">
           <a :href="editUrl">
             <i class="fa fa-pencil"></i>
-          </a>     
+          </a>
         </span>
         <span class="delete">
           <i class="fa fa-trash" @click="modalDelete=true"></i>
@@ -48,7 +48,7 @@
       },
       img: {
         type: String,
-        default: require('@/assets/img/img-1.jpg')
+        default: require('../../assets/img/img-1.jpg')
       },
       desc: {
         type: String,
