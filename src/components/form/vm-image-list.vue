@@ -3,6 +3,9 @@
     <Row class="image-list-heading vm-panel">
       <div class="panel-heading">
         {{ title }}
+
+        <img class="camera_image" :src="camImage" alt="选择该摄像头下行人图片" />
+
       </div>
       <Row type="flex" align="middle" justify="space-between" class="panel-body">
        <div class="search-bar">
@@ -34,6 +37,9 @@
       VmCard
     },
     props: {
+      camImage:{
+        type: String
+      },
       title: {
         type: String,
         default: 'Image List'

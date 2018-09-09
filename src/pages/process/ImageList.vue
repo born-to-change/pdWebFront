@@ -1,18 +1,19 @@
 <template>
   <div>
-    <VmImageList v-show="isShowPersonImg" :data="dataImageList" @delete-ok="deletefn" @get-sequence="getSequenceImages" class="vm-margin"></VmImageList>
+
+    <VmImageList v-show="isShowPersonImg" :data="dataImageList" :camImage="camImage" @delete-ok="deletefn" @get-sequence="getSequenceImages" class="vm-margin"></VmImageList>
 
     <el-dialog
       title="提示"
       :lock-fullscreen="true"
-      :visible.sync="dialogVisible"
-      width="70%">
+      :visible.sync="isShowSequenceImg"
+      width="70%">i
       <el-container>
         <ul class="list-unstyled list-inline">
           <li class="imgLi"  v-for="(item,index) in imageList" :key="index"
               :item="item"
               :index="index">
-            <img class="img" :src=item>
+            <img class="img" :src=item @click="selectAsCamImg(item)">
           </li>
         </ul>
       </el-container>
@@ -40,8 +41,9 @@
     },
     data: function () {
       return {
+        camImage:'http://172.18.32.192:8082/code/toolimg/add.png',
         isShowPersonImg:true,
-        dialogVisible:false,
+        isShowSequenceImg:false,
         dataImageList: [],
         imageList:[]
       }
@@ -64,6 +66,11 @@
     },
 
     methods: {
+      selectAsCamImg:function (img) {
+        this.camImage = img
+        this.isShowSequenceImg = false
+        this.isShowPersonImg = true
+      },
       getSequenceImages:function (imgName) {
         var _this = this
         var camera = JSON.parse(localStorage.getItem('currentCam'))
@@ -74,7 +81,7 @@
           imgName: imgName
         }).then(function (response) {
           _this.isShowPersonImg = false
-          _this.dialogVisible = true
+          _this.isShowSequenceImg = true
           _this.imageList = response.data
           console.log(response.data)
         })
@@ -102,5 +109,11 @@
     float:left;
     /*list-style:none;*/
     margin-left: 5px;
+  }
+  .camera_image{
+    margin-bottom: 10px;
+    float: left;
+    width: 75px;
+    height: 60px;
   }
 </style>
