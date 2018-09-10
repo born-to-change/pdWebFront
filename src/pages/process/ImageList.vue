@@ -1,13 +1,14 @@
 <template>
   <div>
 
-    <VmImageList v-show="isShowPersonImg" :data="dataImageList" :camImage="camImage" @delete-ok="deletefn" @get-sequence="getSequenceImages" class="vm-margin"></VmImageList>
+    <VmImageList v-show="isShowPersonImg" :data="dataImageList"  :camImage="camImage" :bindingImg="bindingImg" @delete-ok="deletefn" @get-sequence="getSequenceImages" class="vm-margin"></VmImageList>
 
     <el-dialog
       title="提示"
       :lock-fullscreen="true"
       :visible.sync="isShowSequenceImg"
-      width="70%">i
+      width="70%"
+      :before-close="sequenceDialogClose">
       <el-container>
         <ul class="list-unstyled list-inline">
           <li class="imgLi"  v-for="(item,index) in imageList" :key="index"
@@ -33,6 +34,7 @@
   import axios from 'axios'
   import VmImageList from '../../components/form/vm-image-list'
   import ElContainer from "../../../node_modules/element-ui/packages/container/src/main.vue";
+  import {timestamp2Date, Date2timestamp} from '../../../src/util/fmtDate.js'
   export default {
     name: 'ImageList',
     components: {
@@ -45,19 +47,26 @@
         isShowPersonImg:true,
         isShowSequenceImg:false,
         dataImageList: [],
+        bindingImg:'',
         imageList:[]
       }
     },
     mounted: function () {
       var camera = JSON.parse(localStorage.getItem('currentCam'))
+      this.bindingImg = camera.selectImageUrl
       var _this = this
-      axios.post('http://172.18.32.192:5006/getPersonImage', {
+      axios.post('http://172.18.32.192:5009/getPersonImage', {
         userName:localStorage.getItem("userName"),
         proId: localStorage.getItem("proId"),
-        camName:camera.camName
+        camName:camera.camName,
+        videoTime:Date2timestamp(camera.videoTime),
+        videoUrl:camera.videoUrl
 
       }).then(function (response) {
         _this.dataImageList = response.data
+        _this.dataImageList.forEach(function (value, index, array) {
+          array[index].desc = timestamp2Date(value.desc)
+        })
         console.log(response.data)
       })
         .catch(function (error) {
@@ -66,6 +75,14 @@
     },
 
     methods: {
+      sequenceDialogClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.isShowSequenceImg = false
+            this.isShowPersonImg = true
+          })
+          .catch(_ => {});
+      },
       selectAsCamImg:function (img) {
         this.camImage = img
         this.isShowSequenceImg = false
@@ -74,7 +91,7 @@
       getSequenceImages:function (imgName) {
         var _this = this
         var camera = JSON.parse(localStorage.getItem('currentCam'))
-        axios.post('http://172.18.32.192:5006/get_sequence', {
+        axios.post('http://172.18.32.192:5009/get_sequence', {
           userName:localStorage.getItem("userName"),
           proId: localStorage.getItem("proId"),
           camName:camera.camName,
@@ -110,10 +127,5 @@
     /*list-style:none;*/
     margin-left: 5px;
   }
-  .camera_image{
-    margin-bottom: 10px;
-    float: left;
-    width: 75px;
-    height: 60px;
-  }
+
 </style>

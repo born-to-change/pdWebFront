@@ -137,7 +137,6 @@
         _this.projects = response.data
         _this.projects.forEach(function (value, index, array) {
           array[index].proTime = timestamp2Date(value.proTime)
-          console.log(array[index].proTime)
         })
       })
         .catch(function (error) {

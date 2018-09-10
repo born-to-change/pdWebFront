@@ -2,9 +2,14 @@
   <div class="vm-image-list">
     <Row class="image-list-heading vm-panel">
       <div class="panel-heading">
-        {{ title }}
-
+        <img class="camera_image" :src="bindingImg" />
         <img class="camera_image" :src="camImage" alt="选择该摄像头下行人图片" />
+        <input name="imgbtn" type="image" src="http://172.18.32.192:8082/code/toolimg/search.png" @click="getTopPerson" class="search-person">
+        <el-input-number style="margin-left: 20px" v-model="topNum" @change="handleChange" :min="1" :max="40" label="描述文字"></el-input-number>
+        <br>
+        <br><span style="margin-left: 110px">目标行人</span>
+        <span style="margin-left: 100px">摄像头下行人图片</span>  <span style="margin-left: 200px">检索目标行人</span>
+        <span style="margin-left: 50px">返回top行人数</span>
 
       </div>
       <Row type="flex" align="middle" justify="space-between" class="panel-body">
@@ -31,18 +36,18 @@
 
 <script>
   import VmCard from './vm-card'
+  import axios from 'axios'
   export default {
     name: 'VmImageList',
     components: {
       VmCard
     },
     props: {
-      camImage:{
+      bindingImg:{
         type: String
       },
-      title: {
-        type: String,
-        default: 'Image List'
+      camImage:{
+        type: String
       },
       // origin data
       data: {
@@ -62,6 +67,7 @@
     },
     data: function () {
       return {
+        topNum: 10,
         keyword: '', // keyword for search
         dataShow: [], // data for showing
         showNum: 48, // number of item per page
@@ -77,6 +83,25 @@
       pageChange: function (page) {
         this.currentPage = page
         this.updateDataShow()
+      },
+      getTopPerson:function(){
+        var _this = this
+        var camera = JSON.parse(localStorage.getItem('currentCam'))
+        axios.post('http://172.18.32.192:5009/jiansuo', {
+          size: _this.topNum,
+          userName:localStorage.getItem("userName"),
+          proId: localStorage.getItem("proId"),
+          searchUrl: '/disk1/PersonSearchPrj/files'+_this.bindingImg.split('/file',2)[1],
+          camName:camera.camName,
+        }).then(function (response) {
+          _this.isShowPersonImg = false
+         _this.dataShow = response.data
+          console.log(response.data)
+        })
+          .catch(function (error) {
+            console.log(error)
+          })
+
       },
       search: function () {
         let that = this
@@ -108,3 +133,20 @@
     }
   }
 </script>
+
+<style scoped>
+  .camera_image{
+    margin-bottom: 10px;
+    margin-left: 100px;
+    float: left;
+    width: 75px;
+    height: 100px;
+  }
+
+  .search-person{
+    margin-left: 200px;
+    width: 100px;
+    height: 100px;
+
+  }
+</style>

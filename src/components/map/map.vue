@@ -29,6 +29,28 @@
 
     <el-dialog
       title="提示"
+      :lock-fullscreen="true"
+      :visible.sync="imgListDialogVisible"
+      width="70%">
+      <el-container>
+        <ul class="list-unstyled list-inline">
+          <li class="imgLi"  v-for="(item,index) in imageList" :key="index"
+              :item="item"
+              @click="bingingFileImage(item)"
+              :index="index">
+            <img class="img" :src=item.fileUrl>
+          </li>
+        </ul>
+      </el-container>
+
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog
+      title="提示"
       :visible.sync="editCameraDialogVisible"
       :before-close="closeCamDialog"
       width="60%"
@@ -157,6 +179,7 @@
     data() {
       return {
         interval: null,
+        imageList:[],
         addCam: true,
         fileId: "",
         fileName: "",
@@ -164,6 +187,7 @@
         editOrCreate: 1,
         editCamId: "",
         editIndex: "",
+        imgListDialogVisible:false,
         editRow: "",
         isEditCamera: false,
         editCameraDialogVisible: false,
@@ -258,7 +282,6 @@
             this.$router.push({path: '/test'})
           })
         }
-
       },
       bingImage() {
         var _this = this
@@ -272,6 +295,23 @@
             console.log(error)
           })
         this.imgListDialogVisible = true
+      },
+      bingingFileImage:function (imgUrl) {
+
+        this.cameras.forEach(function (value, index, array) {
+          array[index].selectImageUrl = imgUrl.fileUrl
+          axios.post('http://172.18.32.192:8081/camera/updateCamera', {
+            camera: array[index]
+          }).then(function (response) {
+
+          })
+            .catch(function (error) {
+              console.log(error)
+            })
+        })
+
+        this.imgListDialogVisible = false
+
       },
       finishAddCam() {
         this.addCam = false
@@ -308,7 +348,7 @@
       processCamera(index, row) {
         var _this = this
         row.isProcess = 1
-        axios.post('http://172.18.32.192:5008/processVideo', {
+        axios.post('http://172.18.32.192:5009/processVideo', {
           userId: localStorage.getItem("userId"),
           userName: localStorage.getItem("userName"),
           proId: localStorage.getItem("proId"),
@@ -325,7 +365,7 @@
           })
 
         _this.interval = setInterval(() => {
-          axios.post('http://172.18.32.192:5008/getProgress', {
+          axios.post('http://172.18.32.192:5009/getProgress', {
             userId: localStorage.getItem("userId"),
             userName: localStorage.getItem("userName"),
             proId: localStorage.getItem("proId"),
@@ -544,7 +584,11 @@
   .finishLocate {
     margin-right: 20px;
   }
-
+  .imgLi{
+    float:left;
+    /*list-style:none;*/
+    margin-left: 5px;
+  }
   .bing_video {
     margin-left: 200px;
   }
