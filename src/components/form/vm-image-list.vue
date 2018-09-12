@@ -37,6 +37,8 @@
 <script>
   import VmCard from './vm-card'
   import axios from 'axios'
+  import {timestamp2Date, Date2timestamp} from '../../../src/util/fmtDate.js'
+
   export default {
     name: 'VmImageList',
     components: {
@@ -87,15 +89,21 @@
       getTopPerson:function(){
         var _this = this
         var camera = JSON.parse(localStorage.getItem('currentCam'))
-        axios.post('http://172.18.32.192:5009/jiansuo', {
+        axios.post('http://172.18.32.192:5011/jiansuo', {
           size: _this.topNum,
           userName:localStorage.getItem("userName"),
           proId: localStorage.getItem("proId"),
           searchUrl: '/disk1/PersonSearchPrj/files'+_this.bindingImg.split('/file',2)[1],
           camName:camera.camName,
+          videoUrl:camera.videoUrl,
+          videoTime:Date2timestamp(camera.videoTime)
         }).then(function (response) {
           _this.isShowPersonImg = false
          _this.dataShow = response.data
+
+          _this.dataShow.forEach(function (value, index, array) {
+            array[index].desc = timestamp2Date(value.desc)
+          })
           console.log(response.data)
         })
           .catch(function (error) {
