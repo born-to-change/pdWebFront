@@ -55,7 +55,7 @@
       var camera = JSON.parse(localStorage.getItem('currentCam'))
       this.bindingImg = camera.selectImageUrl
       var _this = this
-      axios.post('http://172.18.32.192:5009/getPersonImage', {
+      axios.post('http://172.18.32.192:5011/getPersonImage', {
         userName:localStorage.getItem("userName"),
         proId: localStorage.getItem("proId"),
         camName:camera.camName,
@@ -91,7 +91,7 @@
       getSequenceImages:function (imgName) {
         var _this = this
         var camera = JSON.parse(localStorage.getItem('currentCam'))
-        axios.post('http://172.18.32.192:5009/get_sequence', {
+        axios.post('http://172.18.32.192:5011/get_sequence', {
           userName:localStorage.getItem("userName"),
           proId: localStorage.getItem("proId"),
           camName:camera.camName,

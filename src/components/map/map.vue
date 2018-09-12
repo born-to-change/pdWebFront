@@ -13,7 +13,7 @@
         <el-amap-marker vid="component-marker" :position="componentMarker.position"
                         :content-render="componentMarker.contentRender"></el-amap-marker>
         <el-amap-marker v-for="(marker, index) in markers" :position="marker.position" :key="index"
-                        :events="marker.events" :visible="marker.visible" :draggable="marker.draggable"
+                        :events="marker.events"  :visible="marker.visible" :draggable="marker.draggable"
                         :vid="index"></el-amap-marker>
       </el-amap>
 
@@ -201,6 +201,12 @@
         zoom: 14,
         center: [116.405306, 39.904989],
         markers: [],
+//        camImages: [
+//          {
+//            url: 'http://172.18.32.192:8082/image/root/5/cam7/Image/images/person379.jpg',
+//            bounds: [[116.405306, 39.904989], [116.408954,39.903047]],
+//          }
+//        ],
         cameras: [],
         cam: {
           cameraId: "",
@@ -222,6 +228,7 @@
               'div',
               {
                 style: {background: '#80cbc4', whiteSpace: 'nowrap', border: 'solid #ddd 1px', color: '#f00'},
+                icon: "http://172.18.32.192:8082/image/root/5/cam7/Image/images/person379.jpg",
                 on: {
                   click: () => {
                     const position = this.renderMarker.position;
@@ -237,7 +244,7 @@
           position: [116.405306, 39.904989],
           contentRender: (h, instance) => h(exampleComponents, {
             style: {backgroundColor: '#fff'},
-            props: {text: 'father is here'}
+            props: { icon: "http://172.18.32.192:8082/image/root/5/cam7/Image/images/person379.jpg"}
           }, ['xxxxxxx'])
         },
         slotMarker: {
@@ -348,7 +355,7 @@
       processCamera(index, row) {
         var _this = this
         row.isProcess = 1
-        axios.post('http://172.18.32.192:5009/processVideo', {
+        axios.post('http://172.18.32.192:5011/processVideo', {
           userId: localStorage.getItem("userId"),
           userName: localStorage.getItem("userName"),
           proId: localStorage.getItem("proId"),
@@ -365,7 +372,7 @@
           })
 
         _this.interval = setInterval(() => {
-          axios.post('http://172.18.32.192:5009/getProgress', {
+          axios.post('http://172.18.32.192:5011/getProgress', {
             userId: localStorage.getItem("userId"),
             userName: localStorage.getItem("userName"),
             proId: localStorage.getItem("proId"),
@@ -397,9 +404,9 @@
                   console.log(error)
                 })
             }
-//           if(row.isProcess == 0){
-//             clearInterval(_this.interval);
-//           }
+           if(row.isProcess == 0){
+             clearInterval(_this.interval);
+            }
           })
             .catch(function (error) {
               console.log(error)
