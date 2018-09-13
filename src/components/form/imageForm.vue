@@ -33,7 +33,7 @@
     data() {
       return {
         imageList:[],
-        currentPage4: 4
+        currentPage4: 1
       };
     },
     mounted: function () {

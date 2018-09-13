@@ -4,14 +4,31 @@
       <div class="panel-heading">
         <img class="camera_image" :src="bindingImg" />
         <img class="camera_image" :src="camImage" alt="选择该摄像头下行人图片" />
+        <img class="camera_image" src="http://172.18.32.192:8082/code/toolimg/video-player.png" @click="playback">
+        <el-input-number style="margin-left: 20px"  controls-position="right" size="mini" v-model="seconds" @change="handleChange" :min="5" :max="100" label="描述文字"></el-input-number>
+
         <input name="imgbtn" type="image" src="http://172.18.32.192:8082/code/toolimg/search.png" @click="getTopPerson" class="search-person">
         <el-input-number style="margin-left: 20px" v-model="topNum" @change="handleChange" :min="1" :max="40" label="描述文字"></el-input-number>
         <br>
-        <br><span style="margin-left: 110px">目标行人</span>
-        <span style="margin-left: 100px">摄像头下行人图片</span>  <span style="margin-left: 200px">检索目标行人</span>
-        <span style="margin-left: 50px">返回top行人数</span>
-
+        <br><span style="margin-left:110px">目标行人</span>
+        <span style="margin-left: 120px">选中行人</span>  <span style="margin-left: 140px">回放</span>
+        <span style="margin-left: 60px">前后间隔(单位:秒)</span>
+        <span style="margin-left: 150px">目标行人reID</span>   <span style="margin-left:60px">返回人数</span>
       </div>
+
+      <el-dialog
+        title="提示"
+        :visible.sync="isPlayBack"
+        width="80%"
+        :before-close="handleCloseVideo">
+
+            <video-player  class="video-player vjs-custom-skin"
+                           ref="videoPlayer"
+                           :playsinline="true"
+                           :options="playerOptions"
+            ></video-player>
+      </el-dialog>
+
       <Row type="flex" align="middle" justify="space-between" class="panel-body">
        <div class="search-bar">
           <Input placeholder="Please enter ..." v-model="keyword" style="width: 300px"></Input>
@@ -54,29 +71,87 @@
       // origin data
       data: {
         type: Array,
-        default: function () {
-          return [
-            {
-              id: '19920805',
-              title: 'Title',
-              img: require('../../assets/img/img-1.jpg'),
-              desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s ly dummy tly dummy tly dummy tly dummy tly dummy tly dummy t',
-              to: '#'
-            }
-          ]
-        }
+//        default: function () {
+//          return [
+//            {
+//              id: '19920805',
+//              title: 'Title',
+//              img: require('../../assets/img/img-1.jpg'),
+//              desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry,Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s ly dummy tly dummy tly dummy tly dummy tly dummy tly dummy t',
+//              to: '#'
+//            }
+//          ]
+//        }
       }
     },
     data: function () {
       return {
+        playerOptions : {
+          playbackRates: [0.7, 1.0, 1.5, 2.0],
+          autoplay: true,
+          muted: false,
+          loop: false,
+          preload: 'auto',
+          language: 'zh-CN',
+          aspectRatio: '16:9',
+          fluid: true,
+          sources: [],
+          poster: "../../static/images/test.jpg",
+          // width: document.documentElement.clientWidth,
+          notSupportedMessage: '此视频暂无法播放，请稍后再试',
+          controlBar: {
+            timeDivider: true,
+            durationDisplay: true,
+            remainingTimeDisplay: false,
+            fullscreenToggle: false
+          }
+        },
+
+        isPlayBack:false,
         topNum: 10,
+        seconds:5,
+        playBackUrl:"",
         keyword: '', // keyword for search
         dataShow: [], // data for showing
-        showNum: 48, // number of item per page
+        showNum: 20, // number of item per page
         currentPage: 1
       }
     },
     methods: {
+
+      playback:function () {
+        var _this = this
+        var imgUrl = _this.camImage
+        if(this.camImage!= 'http://172.18.32.192:8082/code/toolimg/add.png'){
+
+          var camera = JSON.parse(localStorage.getItem('currentCam'))
+
+
+          axios.post('http://172.18.32.192:5011/playBackVideo', {
+            userName:localStorage.getItem("userName"),
+            proId: localStorage.getItem("proId"),
+            camName:camera.camName,
+            videoUrl:camera.videoUrl,
+            frame: parseInt(imgUrl.split('/')[10].split('.',1)[0]),
+            seconds:_this.seconds
+          }).then(function (response) {
+            _this.playerOptions.sources = response.data
+            _this.isPlayBack = true
+          })
+            .catch(function (error) {
+              console.log(error)
+            })
+        }
+
+      },
+      handleCloseVideo:function () {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              this.isPlayBack = false
+              done();
+            })
+            .catch(_ => {});
+      },
       updateDataShow: function () {
         let startPage = (this.currentPage - 1) * this.showNum
         let endPage = startPage + this.showNum
@@ -152,7 +227,7 @@
   }
 
   .search-person{
-    margin-left: 200px;
+    margin-left: 100px;
     width: 100px;
     height: 100px;
 

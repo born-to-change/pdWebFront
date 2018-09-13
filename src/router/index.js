@@ -6,7 +6,7 @@ import VideoPlayer from 'vue-video-player'
 const Home = resolve => require(['@/pages/main/Home'], resolve)
 const index = resolve => require(['@/pages/main/index'], resolve)
 const MapIndex = resolve => require(['@/components/map/map'], resolve)
-const test = resolve => require(['@/components/form/imageForm'], resolve)
+const line = resolve => require(['@/components/map/line'], resolve)
 const image = resolve => require(['@/pages/process/ImageList'], resolve)
 
 Vue.use(VueAMap);
@@ -29,8 +29,9 @@ const router =  new Router({
       component: index,
       children: [
         {path: 'home', name: 'Home', component: Home, meta: {title: '行人检测首页'}},
-        {path: 'map', name: 'mine', component: MapIndex, meta: {title: '地图'}},
-        {path: 'test', name: 'test', component: image, meta: {title: '地图'}},
+        {path: 'map', name: 'map', component: MapIndex, meta: {title: '地图'}},
+        {path: 'image', name: 'image', component: image, meta: {title: '图片'}},
+        {path: 'line', name: 'line', component: line, meta: {title: '轨迹'}},
       ]
     }
   ]

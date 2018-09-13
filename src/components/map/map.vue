@@ -4,9 +4,8 @@
       <el-button type="primary" plain @click="createCamera">创建摄像头</el-button>
       <el-button class="finishLocate" type="warning" plain v-on:click="finishAddCam">创建完成</el-button>
       <el-button type="primary" plain @click="bingImage">绑定检索图片</el-button>
-      <router-link to="/test">
-        <el-button type="primary" plain @click="manageCamera">生成行人轨迹</el-button>
-      </router-link>
+        <el-button type="primary" plain @click="generateTrial">生成行人轨迹</el-button>
+
     </el-row>
     <div class="amap-page-container">
       <el-amap vid="amapDemo" :zoom="zoom" :center="center" class="amap-demo">
@@ -276,21 +275,24 @@
       }, 300)
     },
     methods: {
-      resolveResults(index, row) {
+      generateTrial:function(){
+        this.$router.push({path: '/line'})
+      },
+      resolveResults:function(index, row) {
         localStorage.setItem('currentCam', JSON.stringify(row))
         if (row.status == 1) {
-          this.$router.push({path: '/test'})
+          this.$router.push({path: '/image'})
         } else {
           this.$confirm('视频尚未处理完，您确定要预览处理结果吗?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            this.$router.push({path: '/test'})
+            this.$router.push({path: '/image'})
           })
         }
       },
-      bingImage() {
+      bingImage:function() {
         var _this = this
         axios.post('http://172.18.32.192:8081/file/getImagesByUserId', {
           userId: localStorage.getItem("userId"),
