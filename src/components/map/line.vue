@@ -20,7 +20,7 @@
         center: [116.405306, 39.904989],
         polyline: {
 
-          path:'',
+          path:[],
           events: {
             click(e) {
               alert('click polyline');
@@ -32,8 +32,9 @@
           },
           editable: true,
           strokeStyle: "dashed",
-          strokeDasharray: [5,7,20,9,30,11,40,13,50,15,60,17,70,19,80,21,100,23,150,26,170,30,200,50,250,60,300,70,350,80,400],
-          lineJoin:"round"
+          strokeDasharray: [5,2,10,4,20,6,30,8,40,10,50,12,60,14,70,16,80,18,90,20,100,22,110,24,120,26,130,28,140,30,150,32,160
+          ,34,178,36,180,38,190,40,200,50,220,52,240,54,260,56,280,58,300,60,320,62,350,46,380,50,420],
+          lineJoin:"miter"
         }
       };
     },
@@ -48,10 +49,10 @@
         var lineArr = new Array();
         var imageList = response.data
         imageList.forEach(function (value, index, array) {
-
-          lngX =Number(value.camLng);
+          // var mark = new Array();
+          lngX = Number(value.camLng);
           latY = Number(value.camLat);
-          lineArr.push(new AMap(lngX,latY));
+          lineArr.push([lngX,latY]);
         })
 
 
@@ -65,6 +66,7 @@
 //
 //            }
 //          }
+        _this.center = lineArr[0]
         _this.polyline.path = lineArr
         console.log(lineArr)
 ////        _this.center = pathList[0]
