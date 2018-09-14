@@ -54,6 +54,7 @@
     mounted: function () {
       var camera = JSON.parse(localStorage.getItem('currentCam'))
       this.bindingImg = camera.selectImageUrl
+      this.camImage = camera.videoImage
       var _this = this
       axios.post('http://172.18.32.192:5011/getPersonImage', {
         userName:localStorage.getItem("userName"),
@@ -84,26 +85,61 @@
           .catch(_ => {});
       },
       selectAsCamImg:function (img) {
-        var _this = this
         var camera = JSON.parse(localStorage.getItem('currentCam'))
         this.camImage = img
+        camera.videoTime = Date2timestamp(camera.videoTime)+parseInt(img.split('/')[10].split('.',1)[0])*1000
         console.log(img)
         this.isShowSequenceImg = false
         this.isShowPersonImg = true
-        axios.post('http://172.18.32.192:8081/image/createImage', {
-          cameraId:camera.cameraId,
-          imageUrl:img,
-          imageTime:Date2timestamp(camera.videoTime)+parseInt(img.split('/')[10].split('.',1)[0])*1000,
-          proId:camera.proId,
-          camName:camera.camName,
-          camLng:camera.camLng,
-          camLat:camera.camLat,
-          searchImageUrl:camera.selectImageUrl
-        }).then(function (response) {
-        })
-          .catch(function (error) {
-            console.log(error)
+        if(camera.isSelectImg == 0){
+          camera.isSelectImg = 1
+          camera.videoImage = img
+          localStorage.setItem('currentCam', JSON.stringify(camera))
+          axios.post('http://172.18.32.192:8081/image/createImage', {
+            cameraId:camera.cameraId,
+            imageUrl:img,
+            imageTime:Date2timestamp(camera.videoTime)+parseInt(img.split('/')[10].split('.',1)[0])*1000,
+            proId:camera.proId,
+            camName:camera.camName,
+            camLng:camera.camLng,
+            camLat:camera.camLat,
+            searchImageUrl:camera.selectImageUrl
+          }).then(function (response) {
+
           })
+            .catch(function (error) {
+              console.log(error)
+            })
+        }else {
+          axios.post('http://172.18.32.192:8081/image/updateImage', {
+            cameraId:camera.cameraId,
+            imageUrl:img,
+            imageTime:Date2timestamp(camera.videoTime)+parseInt(img.split('/')[10].split('.',1)[0])*1000,
+            proId:camera.proId,
+            camName:camera.camName,
+            camLng:camera.camLng,
+            camLat:camera.camLat,
+            searchImageUrl:camera.selectImageUrl
+          }).then(function (response) {
+
+          })
+            .catch(function (error) {
+              console.log(error)
+            })
+        }
+        camera.videoImage =img
+        localStorage.setItem('currentCam', JSON.stringify(camera))
+
+        setTimeout(function () {
+          axios.post('http://172.18.32.192:8081/camera/updateCamera', {
+            camera: camera
+          }).then(function (response) {
+          })
+            .catch(function (error) {
+              console.log(error)
+            })
+        }, 1000)
+
 
 
       },

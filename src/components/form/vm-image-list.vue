@@ -87,7 +87,7 @@
     data: function () {
       return {
         playerOptions : {
-          playbackRates: [0.7, 1.0, 1.5, 2.0],
+          playbackRates: [0.7, 1.0, 1.5, 2.0,3.0,4.0],
           autoplay: true,
           muted: false,
           loop: false,
@@ -113,7 +113,7 @@
         playBackUrl:"",
         keyword: '', // keyword for search
         dataShow: [], // data for showing
-        showNum: 20, // number of item per page
+        showNum: 24, // number of item per page
         currentPage: 1
       }
     },
@@ -212,6 +212,8 @@
       }
     },
     mounted: function () {
+      var camera = JSON.parse(localStorage.getItem('currentCam'))
+      this.camImage = camera.videoImage
       this.dataShow = this.data.slice(0, this.showNum)
     }
   }

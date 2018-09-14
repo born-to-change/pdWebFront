@@ -112,6 +112,7 @@
             <p>: {{ scope.row.proTime }}</p>
             <p v-show="false">: {{scope.row.userId}}</p>
             <p v-show="false">: {{scope.row.proId}}</p>
+            <p v-show="false">: {{scope.row.isSelectImg}}</p>
             <p>描述: {{ scope.row.cameraDescription }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.videoTime }}</el-tag>
@@ -209,7 +210,7 @@
         cameras: [],
         cam: {
           cameraId: "",
-          videoImage: "Na",
+          videoImage: "",
           cameraDescription: "",
           camLng: "Na",
           camLat: "Na",
@@ -259,7 +260,6 @@
           proId: localStorage.getItem("proId")
         }).then(function (response) {
           _this.cameras = response.data
-          _this.cam = {videoImage: "Na"}
           for (var item of _this.cameras) {
             let marker = {
               position: [item.camLng, item.camLat]
@@ -336,7 +336,6 @@
         this.$confirm('确认关闭？')
           .then(_ => {
             this.editCameraDialogVisible = false
-            this.cam = {videoImage: "Na"}
             done();
           })
           .catch(_ => {
@@ -541,7 +540,6 @@
       },
 
       addMarker: function (dragData) {
-        this.cam = {videoImage: "Na"}
         let marker = {
           position: [dragData.lng, dragData.lat]
         };
