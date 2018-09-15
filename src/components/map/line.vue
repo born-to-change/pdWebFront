@@ -4,7 +4,8 @@
 
       <el-amap-polyline :editable="polyline.editable"  :strokeStyle="polyline.strokeStyle"
                         :strokeDasharray="polyline.strokeDasharray" :path="polyline.path"
-                        :lineJoin="polyline.lineJoin" :events="polyline.events"></el-amap-polyline>
+                        :lineJoin="polyline.lineJoin" :strokeColor="polyline.strokeColor"  :events="polyline.events"></el-amap-polyline>
+      <!--<el-amap-text v-for="text in texts" :text="text.text" :key="index" :offset="text.offset" :position="text.position" :events="text.events"></el-amap-text>-->
     </el-amap>
 
   </div>
@@ -16,7 +17,7 @@
   export default{
     data() {
       return {
-        zoom: 12,
+        zoom: 15,
         center: [116.405306, 39.904989],
         polyline: {
 
@@ -30,12 +31,25 @@
               console.log(newPath);
             }
           },
+          strokeColor:'#FF0000',
           editable: true,
           strokeStyle: "dashed",
           strokeDasharray: [5,2,10,4,20,6,30,8,40,10,50,12,60,14,70,16,80,18,90,20,100,22,110,24,120,26,130,28,140,30,150,32,160
           ,34,178,36,180,38,190,40,200,50,220,52,240,54,260,56,280,58,300,60,320,62,350,46,380,50,420],
           lineJoin:"miter"
-        }
+        },
+//        texts: [
+//          {
+//            position: [121.5273285, 31.21515044],
+//            text: 'hello world',
+//            offset: [0, 0],
+//            events: {
+//              click: () => {
+//                alert('click text');
+//              }
+//            }
+//          }
+//        ]
       };
     },
 
@@ -66,7 +80,7 @@
 //
 //            }
 //          }
-        _this.center = lineArr[0]
+        _this.center = lineArr[Math.round(imageList.length/2)]
         _this.polyline.path = lineArr
         console.log(lineArr)
 ////        _this.center = pathList[0]
